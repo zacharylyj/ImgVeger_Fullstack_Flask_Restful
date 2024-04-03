@@ -1,0 +1,26 @@
+<nav>
+  <div class="fixed-top container-fluid text-center top-container">
+    <div class="navbar" id="myNavbar">
+      <a href="/home" class="nav-link">Home</a>
+      <a href="/bulk" class="nav-link">Bulk</a>
+      <a href="/history" class="nav-link">History</a>
+      <div class="right">
+        <a href="/account">{{ user_email }}</a>
+        <a href="/logout" class="right">Logout</a>
+      </div>
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </div>
+</nav>
+<script>
+  function myFunction() {
+    var x = document.getElementById("myNavbar");
+    if (x.className === "navbar") {
+      x.className += " responsive";
+    } else {
+      x.className = "navbar";
+    }
+  }
+</script>

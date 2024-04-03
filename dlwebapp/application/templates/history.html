@@ -1,0 +1,71 @@
+{% extends "layout.html" %} {% block content %}
+<div class="customtable">
+  <img src="{{ url_for('static',filename='images/logo.png')}}" />
+  <br />
+  <h2>History</h2>
+  <div class="search-box">
+    <form action="{{ url_for('history_page') }}" method="get">
+      <button class="btn-search"><i class="fas fa-search"></i></button>
+      <input type="text" class="input-search" name="search" value="{{ search_term }}" placeholder="Type to Search...">
+    </form>
+  </div>
+
+  <div class="tablecontent">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>
+            <a
+              href="{{ url_for('history_page', search=search_term, model_filter=model_filter, date_filter=date_filter, sort='asc' if sort_direction == 'desc' else 'desc') }}">
+              ID {% if sort_direction == 'asc' %}▲{% else %}▼{% endif %}
+            </a>
+          </th>
+          <th>Model Used
+            <select name="model_filter" class="filter-select model-filter-select"
+              onchange="window.location.href = '/history?search=' + document.getElementsByName('search')[0].value + '&model_filter=' + this.value;">
+              <option value="">All</option>
+              <option value="128x128" {{ 'selected' if model_filter=='128x128' else '' }}>128x128</option>
+              <option value="31x31" {{ 'selected' if model_filter=='31x31' else '' }}>31x31</option>
+            </select>
+          </th>
+          <th>
+            Time-Log
+            <input type="date" name="date_filter" class="filter-select date-filter-select" onchange="updateFilters()"
+              value="{{ date_filter }}">
+          </th>
+          <th>Prediction</th>
+          <th>Img</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <script>
+        function updateFilters() {
+          const search = document.getElementsByName('search')[0].value;
+          const modelFilter = document.getElementsByName('model_filter')[0].value;
+          const dateFilter = document.getElementsByName('date_filter')[0].value;
+          window.location.href = `/history?search=${search}&model_filter=${modelFilter}&date_filter=${dateFilter}`;
+        }
+      </script>
+      <tbody>
+        {% for entry in entries %}
+        <tr>
+          <td>{{ entry.id }}</td>
+          <td>{{ entry.model_used }}</td>
+          <td>{{ entry.creation_time.strftime("%H:%M %d/%m/%y ")}}</td>
+          <td>{{ entry.prediction_label }}</td>
+          <td>
+            <img src="{{ url_for('static', filename='history/'+entry.image_path) }}" />
+          </td>
+          <td>
+            <form name="frmRemoveEntry" action="/remove" method="post" novalidate>
+              <input type="hidden" name="id" value="{{entry.id}}" />
+              <input type="submit" class="form-control btn-danger" value="Remove" />
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

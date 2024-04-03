@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="customform">
+  <div class="content">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" />
+    <h2>Bulk Vegetable Prediction</h2>
+    <form method="post" class="customform2" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {% for error in form.upload.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        <br>
+        {{ form.upload.label }}
+        <br>
+        {{ form.upload() }}
+      </div>
+      <br>
+      <div class="form-group">
+        {{ form.model_choice.label }} {{ form.model_choice() }}
+      </div>
+      <br>
+      <div class="button-3">
+        {{ form.submit() }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

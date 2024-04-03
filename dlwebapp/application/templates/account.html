@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      type="module"
+      src="https://unpkg.com/@splinetool/viewer@0.9.516/build/spline-viewer.js"
+    ></script>
+    <title>{{title}}</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.c
+ss"
+      integrity="sha384-
+Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='css/main.css')}}"
+    />
+  </head>
+  <body>
+    <div>{% include "includes/nav.html" %}</div>
+    <div class="passwordform">
+      <form class="form" action="/account" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="inputBox">
+          {{ form.current_password }}<i>{{ form.current_password.label }}</i>
+          {% for error in form.current_password.errors %}
+          <span style="color: red">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="inputBox">
+          {{ form.new_password }}<i>{{ form.new_password.label }}</i>
+          {% for error in form.new_password.errors %}
+          <span style="color: red">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="inputBox">
+          {{ form.confirm_password }}<i>{{ form.confirm_password.label }}</i>
+          {% for error in form.confirm_password.errors %}
+          <span style="color: red">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <br />
+        <div type="submit" class="inputBox2">
+          {{ form.submit_change() }} <br />
+          {{ form.submit_delete() }}
+        </div>
+      </form>
+    </div>
+    <spline-viewer
+      loading-anim-type="spinner-big-dark"
+      url="https://prod.spline.design/vnRjv1qmNJshkYem/scene.splinecode"
+    ></spline-viewer>
+    <div>{% include "includes/footer.html" %}</div>
+  </body>
+</html>

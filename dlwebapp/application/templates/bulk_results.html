@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="customform">
+    <div class="content">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" />
+        <h2>Prediction Results</h2>
+        <div class="tablecontent">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Prediction</th>
+                    </tr>
+                </thead>
+                {% for file, prediction in predictions %}
+                <tr>
+                    <td>{{ file }}</td>
+                    <td>{{ prediction }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endblock %}

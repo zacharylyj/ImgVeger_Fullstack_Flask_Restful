@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.c
+ss" integrity="sha384-
+Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+
+<body>
+  <section>{% for i in range(300) %} <span></span> {% endfor %}</section>
+  <div class="flex-column mainfield">
+    {% include "includes/nav.html" %} {% with messages =
+    get_flashed_messages(with_categories=true)%} {% if messages %} {% for
+    category, message in messages %}
+    <div class="text-center alert alert-{{category}}">
+      <p>{{ message }}</p>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+    <div class="contentfield">{% block content %} {% endblock %}</div>
+    <div>{% include "includes/footer.html" %}</div>
+  </div>
+</body>
+
+</html>

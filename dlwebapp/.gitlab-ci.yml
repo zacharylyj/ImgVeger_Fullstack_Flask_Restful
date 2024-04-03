@@ -1,0 +1,63 @@
+stages:
+  - notify_start
+  - test
+  - deploy_prod
+  - notify_end
+
+notify_start:
+  stage: notify_start
+  image: python:3.10-slim
+  script:
+    - pip install requests
+    - python telegram.py "CI/CD Pipeline Started" "$GITLAB_USER_NAME" "$CI_PROJECT_PATH" "$CI_COMMIT_SHA" "$CI_COMMIT_MESSAGE" "$CI_PROJECT_URL/-/jobs/$CI_JOB_ID"
+  only:
+    - main
+  except:
+    - deployment
+    
+test:
+  stage: test
+  image: python:3.10-slim
+  script:
+    - pip install -r requirements.txt
+    - pip install requests
+    - >
+        pytest || (python telegram.py "Test Failed" "$GITLAB_USER_NAME" "$CI_PROJECT_PATH" "$CI_COMMIT_SHA" "$CI_COMMIT_MESSAGE" "$CI_PROJECT_URL/-/jobs/$CI_JOB_ID" && exit 1)
+    - >
+        python telegram.py "Test Passed" "$GITLAB_USER_NAME" "$CI_PROJECT_PATH" "$CI_COMMIT_SHA" "$CI_COMMIT_MESSAGE" "$CI_PROJECT_URL/-/jobs/$CI_JOB_ID"
+
+  allow_failure: false
+  only:
+    - main
+  except:
+    - deployment
+
+deploy_prod:
+  stage: deploy_prod
+  script:
+    - echo "Deploying to Production Environment..."
+    - git config --global user.email "AUTOCICD@example.com"
+    - git config --global user.name "Deployment"
+    - git remote add gitlab_origin https://oauth2:glpat-AFFbMJdqASaPbuN2H2bU@gitlab.com/2b01.2201861.zacharyleong/ca2-daaa2b01-2201861-zacharyleong-dlwebapp.git
+    - git fetch gitlab_origin
+    - git checkout deployment
+    - git merge origin/main
+    - git push gitlab_origin deployment
+    - curl -X POST -F token=8JAyBfSyNxQ -F ref=deployment https://api.render.com/deploy/srv-cn4avi8l5elc73crdl50
+    - echo "Deployment to Production Environment triggered..."
+  only:
+    - main
+  when: on_success
+  except:
+    - deployment
+
+notify_end:
+  stage: notify_end
+  image: python:3.10-slim
+  script:
+    - pip install requests
+    - python telegram.py "New Changes pushed to deployment branch" "$GITLAB_USER_NAME" "$CI_PROJECT_PATH" "$CI_COMMIT_SHA" "$CI_COMMIT_MESSAGE" "$CI_PROJECT_URL/-/jobs/$CI_JOB_ID"
+  only:
+    - main
+  except:
+    - deployment
